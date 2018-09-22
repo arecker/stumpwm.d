@@ -1,7 +1,20 @@
-(stumpwm:set-module-dir "~/.stumpwm.d/modules/")
-(stumpwm:load-module "pass")
-(stumpwm:load-module "swm-gaps")
-(stumpwm:load-module "ttf-fonts")
+(defparameter *stumpwm-modules* '("pass" "swm-gaps" "ttf-fonts"))
+
+(defmacro in-stumpwm (&rest forms)
+  `(let ((returned nil))
+     (in-package :stumpwm)
+     (setf returned (progn ,@forms))
+     (in-package :cl-user)
+     returned))
+
+(defun load-modules ()
+  (in-stumpwm
+   (set-module-dir "~/.stumpwm.d/modules/")
+   (dolist (module *stumpwm-modules*)
+     (load-module module))))
+
+(load-modules)
+
 (stumpwm:add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
 (setf stumpwm:*window-border-style* :none)
 (setf stumpwm:*new-frame-action* :last-window)
@@ -20,8 +33,8 @@
 (setf stumpwm:*time-modeline-string* "%Y-%m-%d %I:%M %P")
 (setf stumpwm:*screen-mode-line-format* '("[%n] %v ^> %B %d"))
 (setf stumpwm:*hidden-window-color* "^n")
-(setf *colors* (append *colors* '("#BFBFBF" "#E5E5E5")))
-(update-color-map (current-screen))
+(setf stumpwm:*colors* (append stumpwm:*colors* '("#BFBFBF" "#E5E5E5")))
+(stumpwm:update-color-map (stumpwm:current-screen))
 (setf stumpwm:*mode-line-background-color* "#E5E5E5")
 (setf stumpwm:*mode-line-foreground-color* "#000000")
 (setf stumpwm:*mode-line-border-width* 5)
