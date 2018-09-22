@@ -33,7 +33,7 @@
 
 (stumpwm:defcommand firefox () ()
   "Start an firefox instance."
-  (stumpwm:run-or-raise "firefox"))
+  (stumpwm:run-shell-command "firefox"))
 
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "M-1") "firefox")
 
