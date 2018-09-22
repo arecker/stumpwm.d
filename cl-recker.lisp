@@ -19,3 +19,7 @@
 	 (now (read-first-int (if (probe-file energy-now) energy-now charge-now)))
 	 (full (read-first-int (if (probe-file energy-full) energy-now charge-full))))
     (format nil "~$%" (float (* 100 (/ now full))))))
+
+(defun power-charge-formatter (ml)
+  (declare (ignore ml))
+  (format nil "~a" (power-charge-percentage)))
