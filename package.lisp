@@ -2,5 +2,6 @@
 
 (defpackage #:cl-recker
   (:use #:cl)
-  (:export :power-charge-percentage
+  (:export :*battery-path*
+	   :power-charge-percentage
 	   :power-charge-formatter))
