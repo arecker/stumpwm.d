@@ -48,8 +48,8 @@
 
 (defun configure-modeline ()
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
-  (setf *time-modeline-string* "%Y-%m-%d %I:%M %P")
-  (setf *screen-mode-line-format* '("[%n] %v ^> %B %d"))
+  (setf *time-modeline-string* "%Y-%m-%d | %I:%M %P")
+  (setf *screen-mode-line-format* '("[%n] %v ^> | %B | %d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
@@ -78,6 +78,23 @@
   (run-or-raise "pavucontrol" '(:class "Pavucontrol")))
 
 (define-key *root-map* (kbd "M-v") "pavucontrol")
+
+(defun configure-xorg ()
+  (dolist (cmd '("xscreensaver -no-splash"
+		 "compton"
+		 "setxkbmap -option ctrl:nocaps"
+		 "xsetroot -cursor_name left_pt"
+		 "xrdb -merge ~/.Xresources"
+		 "xsetroot -cursor_name left_ptr"))
+      (run-shell-command cmd)))
+
+(configure-xorg)
+
+(defun set-wallpaper (pic)
+  (let ((target (merge-pathnames pic (user-homedir-pathname))))
+    (run-shell-command (format nil "feh --bg-scale ~a" target))))
+
+(set-wallpaper "pics/apartment.jpeg")
 
 ;; ;; (define-key *top-map* (kbd "XF86AudioLowerVolume") "todo-volume-down")
 ;; ;; (define-key *top-map* (kbd "XF86AudioRaiseVolume") "todo-volume-up")
