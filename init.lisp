@@ -50,12 +50,6 @@
 
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "M-1") "firefox")
 
-(stumpwm:defcommand emacs () ()
-  "Start an emacs instance."
-  (run-or-raise "emacs -ib 10" '(:class "emacs")))
-
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "e") "emacs")
-
 ;; (define-key *top-map* (kbd "XF86AudioLowerVolume") "todo-volume-down")
 ;; (define-key *top-map* (kbd "XF86AudioRaiseVolume") "todo-volume-up")
 ;; (define-key *top-map* (kbd "XF86AudioMute") "todo-volume-toggle")
