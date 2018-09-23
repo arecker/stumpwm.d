@@ -1,60 +1,84 @@
-(defparameter *stumpwm-modules* '("pass" "swm-gaps" "ttf-fonts"))
-
-(defmacro in-stumpwm (&rest forms)
-  `(let ((returned nil))
-     (in-package :stumpwm)
-     (setf returned (progn ,@forms))
-     (in-package :cl-user)
-     returned))
+(in-package :stumpwm)
 
 (defun load-modules ()
-  (in-stumpwm
-   (set-module-dir "~/.stumpwm.d/modules/")
-   (dolist (module *stumpwm-modules*)
-     (load-module module))))
+  (set-module-dir "~/.stumpwm.d/modules/")
+  (dolist (module '("pass" "swm-gaps" "ttf-fonts"))
+    (load-module module)))
 
 (load-modules)
 
-(stumpwm:add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
-(setf stumpwm:*window-border-style* :none)
-(setf stumpwm:*new-frame-action* :last-window)
-(setf stumpwm:*window-format* " %30t ")
-(setf stumpwm:*window-name-source* :class)
-(setf stumpwm:*message-window-gravity* :bottom-right)
-(setf stumpwm:*input-window-gravity* :bottom-right)
-(setf stumpwm:*message-window-padding* 5)
-(stumpwm:set-fg-color "#000000")
-(stumpwm:set-bg-color "#E5E5E5")
-(stumpwm:set-border-color "#FFFFFF")
-(stumpwm:set-msg-border-width 5)
-(setf swm-gaps:*inner-gaps-size* 10)
-(setf swm-gaps:*outer-gaps-size* 10)
-(swm-gaps:toggle-gaps)
-(setf stumpwm:*time-modeline-string* "%Y-%m-%d %I:%M %P")
-(setf stumpwm:*screen-mode-line-format* '("[%n] %v ^> %B %d"))
-(setf stumpwm:*hidden-window-color* "^n")
-(setf stumpwm:*colors* (append stumpwm:*colors* '("#BFBFBF" "#E5E5E5")))
-(stumpwm:update-color-map (stumpwm:current-screen))
-(setf stumpwm:*mode-line-background-color* "#E5E5E5")
-(setf stumpwm:*mode-line-foreground-color* "#000000")
-(setf stumpwm:*mode-line-border-width* 5)
-(setf stumpwm:*mode-line-border-color* "#FFFFFF")
-(stumpwm:mode-line)
-(stumpwm:set-font (make-instance 'xft:font :family "Inconsolata" :subfamily "Regular" :size 12))
+(defun configure-font (&key family subfamily size)
+  (unless (find subfamily (xft:get-font-subfamilies family) :test #'equal)
+    (xft:cache-fonts))
+  (stumpwm:set-font (make-instance 'xft:font
+				   :family family
+				   :subfamily subfamily
+				   :size size)))
 
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "M-0") "pass-copy")
+(configure-font :family "Inconsolata" :subfamily "Regular" :size 12)
 
-(stumpwm:defcommand firefox () ()
-  "Start an firefox instance."
-  (stumpwm:run-shell-command "firefox"))
+(defun configure-windows ()
+  (setf *window-name-source* :class)
+  (setf *window-format* " %30t ")
+  (set-win-bg-color "#E5E5E5")
+  (setf *window-border-style* :thin)
+  (setf *new-frame-action* :last-window))
 
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "M-1") "firefox")
+(configure-windows)
 
-;; (define-key *top-map* (kbd "XF86AudioLowerVolume") "todo-volume-down")
-;; (define-key *top-map* (kbd "XF86AudioRaiseVolume") "todo-volume-up")
-;; (define-key *top-map* (kbd "XF86AudioMute") "todo-volume-toggle")
+(defun configure-interface ()
+  (set-msg-border-width 5)
+  (set-fg-color "#000000")
+  (set-bg-color "#E5E5E5")
+  (setf *input-window-gravity* :bottom-right)
+  (setf *message-window-gravity* :bottom-right)
+  (setf *message-window-padding* 5))
 
-(stumpwm:defcommand urxvt () ()
-  "Start an xterm instance."
-  (stumpwm:run-shell-command "urxvt"))
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "c") "urxvt")
+(configure-interface)
+
+(setf *hidden-window-color* "^5*")
+(setf *hidden-window-color* "^n")
+
+(defun configure-gaps ()
+  (setf swm-gaps:*inner-gaps-size* 10)
+  (setf swm-gaps:*outer-gaps-size* 10)
+  (unless swm-gaps:*gaps-on* (swm-gaps:toggle-gaps)))
+
+(configure-gaps)
+
+(defun configure-modeline ()
+  (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
+  (setf *time-modeline-string* "%Y-%m-%d %I:%M %P")
+  (setf *screen-mode-line-format* '("[%n] %v ^> %B %d"))
+  (setf *mode-line-background-color* "#E5E5E5")
+  (setf *mode-line-foreground-color* "#000000")
+  (setf *mode-line-border-width* 5)
+  (setf *mode-line-border-color* "#FFFFFF")
+  (setf *hidden-window-color* "^n")
+  (unless *mode-lines* (mode-line)))
+
+(configure-modeline)
+
+(defcommand firefox () ()
+  (run-or-raise "firefox" '(:class "Firefox")))
+
+(define-key *root-map* (stumpwm:kbd "M-f") "firefox")
+
+(defcommand deluge () ()
+  (run-or-raise "deluge-gtk" '(:class "Deluge")))
+
+(define-key *root-map* (kbd "M-d") "deluge")
+
+(defcommand urxvt () ()
+  (run-shell-command "urxvt"))
+
+(define-key *root-map* (kbd "c") "urxvt")
+
+(defcommand pavucontrol () ()
+  (run-or-raise "pavucontrol" '(:class "Pavucontrol")))
+
+(define-key *root-map* (kbd "M-v") "pavucontrol")
+
+;; ;; (define-key *top-map* (kbd "XF86AudioLowerVolume") "todo-volume-down")
+;; ;; (define-key *top-map* (kbd "XF86AudioRaiseVolume") "todo-volume-up")
+;; ;; (define-key *top-map* (kbd "XF86AudioMute") "todo-volume-toggle")
