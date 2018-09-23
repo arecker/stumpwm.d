@@ -49,7 +49,7 @@
 (defun configure-modeline ()
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
   (setf *time-modeline-string* "%Y-%m-%d | %I:%M %P")
-  (setf *screen-mode-line-format* '("[%n] %v ^> | %B | %d"))
+  (setf *screen-mode-line-format* '("[%n] %v ^> %B | %d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
@@ -96,6 +96,17 @@
 
 (set-wallpaper "pics/apartment.jpeg")
 
-;; ;; (define-key *top-map* (kbd "XF86AudioLowerVolume") "todo-volume-down")
-;; ;; (define-key *top-map* (kbd "XF86AudioRaiseVolume") "todo-volume-up")
-;; ;; (define-key *top-map* (kbd "XF86AudioMute") "todo-volume-toggle")
+(defcommand volume-toggle-mute () ()
+  (run-shell-command "pactl set-sink-mute 0 toggle"))
+
+(define-key *top-map* (kbd "XF86AudioMute") "volume-toggle-mute")
+
+(defcommand volume-increase () ()
+  (run-shell-command "pactl set-sink-volume 0 +10%"))
+
+(define-key *top-map* (kbd "XF86AudioRaiseVolume") "volume-increase")
+
+(defcommand volume-decrease () ()
+  (run-shell-command "pactl set-sink-volume 0 -10%"))
+
+(define-key *top-map* (kbd "XF86AudioLowerVolume") "volume-decrease")
