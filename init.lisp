@@ -111,3 +111,5 @@
   (run-shell-command "pactl set-sink-volume 0 -10%"))
 
 (define-key *top-map* (kbd "XF86AudioLowerVolume") "volume-decrease")
+
+(define-key *root-map* (kbd "M-p") "pass-copy")
