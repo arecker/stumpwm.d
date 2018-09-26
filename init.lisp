@@ -113,3 +113,12 @@
 (define-key *top-map* (kbd "XF86AudioLowerVolume") "volume-decrease")
 
 (define-key *root-map* (kbd "M-p") "pass-copy")
+
+(defcommand emacs () ()
+  (run-or-raise "~/.local/bin/emacsclient -c" '(:class "Emacs")))
+
+(define-frame-preference "Emacs"
+    (0 nil t :class "Emacs"))
+
+(define-key *root-map* (kbd "e") "emacs")
+(define-key *root-map* (kbd "C-e") "emacs")
