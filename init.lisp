@@ -61,7 +61,7 @@
 (configure-modeline)
 
 (defcommand firefox () ()
-  (run-or-raise "firefox" '(:class "Firefox")))
+  (run-or-raise "~/.firefox/firefox" '(:class "Firefox")))
 
 (define-key *root-map* (stumpwm:kbd "M-f") "firefox")
 
@@ -95,10 +95,7 @@
   (let ((target (merge-pathnames pic (user-homedir-pathname))))
     (run-shell-command (format nil "feh --bg-scale ~a" target))))
 
-(set-wallpaper "pics/apartment.jpeg")
-
-(defcommand volume-toggle-mute () ()
-  (run-shell-command "pactl set-sink-mute 0 toggle"))
+;; (set-wallpaper "pics/starry-night.jpg")
 
 (define-key *top-map* (kbd "XF86AudioMute") "volume-toggle-mute")
 
@@ -116,9 +113,6 @@
 
 (defcommand emacs () ()
   (run-or-raise "~/.local/bin/emacsclient -c" '(:class "Emacs")))
-
-(define-frame-preference "Emacs"
-    (0 nil t :class "Emacs"))
 
 (define-key *root-map* (kbd "e") "emacs")
 (define-key *root-map* (kbd "C-e") "emacs")
