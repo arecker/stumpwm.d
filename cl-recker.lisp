@@ -33,3 +33,7 @@
 (defun net-vpn-formatter (ml)
   (declare (ignore ml))
   (format nil "~a: ~:[down~;up~]" *vpn-interface* (net-vpn-up-p)))
+
+(defun hostname-formatter (ml)
+  (declare (ignore ml))
+  (format nil "~a" (machine-instance)))

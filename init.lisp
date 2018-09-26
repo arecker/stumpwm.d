@@ -54,10 +54,11 @@
 (configure-colors)
 
 (defun configure-modeline ()
+  (add-screen-mode-line-formatter #\H 'cl-recker:hostname-formatter)
   (add-screen-mode-line-formatter #\V 'cl-recker:net-vpn-formatter)
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
   (setf *time-modeline-string* "%I:%M %P")
-  (setf *screen-mode-line-format* '("lappy486 %v^>%d"))
+  (setf *screen-mode-line-format* '("%H %v^>%d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
