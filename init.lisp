@@ -46,15 +46,23 @@
 
 (configure-gaps)
 
+(defun configure-colors ()
+  (setf *colors*
+	'("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white" "#E5E5E5"))
+  (update-color-map (current-screen)))
+
+(configure-colors)
+
 (defun configure-modeline ()
   (add-screen-mode-line-formatter #\V 'cl-recker:net-vpn-formatter)
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
-  (setf *time-modeline-string* "%Y-%m-%d | %I:%M %P")
-  (setf *screen-mode-line-format* '("[%n] %v ^> %V | %B | %d"))
+  (setf *time-modeline-string* "%I:%M %P")
+  (setf *screen-mode-line-format* '("lappy486 %v^>%d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
   (setf *mode-line-border-color* "#FFFFFF")
+  (setf *mode-line-highlight-template* "^08~A")
   (setf *hidden-window-color* "^n")
   (unless *mode-lines* (mode-line)))
 
