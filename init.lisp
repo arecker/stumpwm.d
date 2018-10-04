@@ -104,7 +104,8 @@
   (let ((target (merge-pathnames pic (user-homedir-pathname))))
     (run-shell-command (format nil "feh --bg-scale ~a" target))))
 
-;; (set-wallpaper "pics/starry-night.jpg")
+(defcommand volume-toggle-mute () ()
+  (run-shell-command "pactl set-sink-mute 0 toggle"))
 
 (define-key *top-map* (kbd "XF86AudioMute") "volume-toggle-mute")
 
