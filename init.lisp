@@ -48,7 +48,9 @@
 
 (defun configure-colors ()
   (setf *colors*
-	'("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white" "#E5E5E5"))
+	'("black" "red" "green"
+	  "yellow" "blue" "magenta"
+	  "cyan" "white" "#E5E5E5"))
   (update-color-map (current-screen)))
 
 (configure-colors)
@@ -63,7 +65,8 @@
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
   (setf *mode-line-border-color* "#FFFFFF")
-  (setf *mode-line-highlight-template* "^08~A")
+  ;; TODO: color shading bug
+  ;; (setf *mode-line-highlight-template* "^08~A")
   (setf *hidden-window-color* "^n")
   (unless *mode-lines* (mode-line)))
 
@@ -105,17 +108,42 @@
     (run-shell-command (format nil "feh --bg-scale ~a" target))))
 
 (defcommand volume-toggle-mute () ()
-  (run-shell-command "pactl set-sink-mute 0 toggle"))
+  (run-shell-command "pactl set-sink-mute 0 toggle")
+  (notify-current-volume-muted))
+
+(defvar *current-volume-level-command*
+  "pactl list sinks | grep  'Volume: front-left' | awk '{ print $5 }'")
+
+(defvar *current-volume-muted-command*
+  "pactl list sinks | grep 'Mute: ' | awk '{ print $2 }'")
+
+(defun current-volume-level ()
+  (first
+   (split-string
+    (uiop:run-program *current-volume-level-command* :output :string))))
+
+(defun volume-muted-p ()
+  (let ((output
+	 (first (split-string (uiop:run-program *current-volume-muted-command* :output :string)))))
+    (equal "yes" output)))
+
+(defun notify-current-volume ()
+  (message "Volume: ~a" (current-volume-level)))
+
+(defun notify-current-volume-muted ()
+  (message "Volume ~:[unmuted~;muted~]" (volume-muted-p)))
 
 (define-key *top-map* (kbd "XF86AudioMute") "volume-toggle-mute")
 
 (defcommand volume-increase () ()
-  (run-shell-command "pactl set-sink-volume 0 +10%"))
+  (run-shell-command "pactl set-sink-volume 0 +10%")
+  (notify-current-volume))
 
 (define-key *top-map* (kbd "XF86AudioRaiseVolume") "volume-increase")
 
 (defcommand volume-decrease () ()
-  (run-shell-command "pactl set-sink-volume 0 -10%"))
+  (run-shell-command "pactl set-sink-volume 0 -10%")
+  (notify-current-volume))
 
 (define-key *top-map* (kbd "XF86AudioLowerVolume") "volume-decrease")
 
