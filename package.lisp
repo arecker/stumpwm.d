@@ -4,4 +4,7 @@
   (:use #:cl)
   (:export :*colors*
 	   :hostname-formatter
-	   :power-charge-formatter))
+	   :make-font
+	   :power-charge-formatter
+	   :volume-level
+	   :volume-muted-p))

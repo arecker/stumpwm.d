@@ -29,3 +29,21 @@
 (defun hostname-formatter (ml)
   (declare (ignore ml))
   (format nil "~a" (machine-instance)))
+
+(defparameter *pactl-cmd* "pactl list sinks")
+
+(defun volume-level ()
+  (first (run-command (awk (grep *pactl-cmd* "Volume: front-left") 5))))
+
+(defun volume-muted-p ()
+  (equal "yes" (first (run-command (awk (grep *pactl-cmd* "Mute: ") 2)))))
+
+(defparameter *font* '(:family "Inconsolata" :subfamily "Regular" :size 12))
+
+(defun make-font ()
+  (let ((family (getf *font* :family))
+	(subfamily (getf *font* :subfamily))
+	(size (getf *font* :size)))
+    (unless (find subfamily (xft:get-font-subfamilies family) :test #'equal)
+      (xft:cache-fonts))
+    (make-instance 'xft:font :family family :subfamily subfamily :size size)))

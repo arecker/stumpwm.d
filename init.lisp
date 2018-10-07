@@ -8,14 +8,9 @@
 (load-modules)
 
 (defun configure-font (&key family subfamily size)
-  (unless (find subfamily (xft:get-font-subfamilies family) :test #'equal)
-    (xft:cache-fonts))
-  (stumpwm:set-font (make-instance 'xft:font
-				   :family family
-				   :subfamily subfamily
-				   :size size)))
+  (stumpwm:set-font (cl-recker:make-font)))
 
-(configure-font :family "Inconsolata" :subfamily "Regular" :size 12)
+(configure-font)
 
 (defun configure-windows ()
   (setf *window-name-source* :class)
@@ -51,11 +46,6 @@
   (update-color-map (current-screen)))
 
 (configure-colors)
-
-(defun configure-groups ()
-  (setf *default-group-name* "Home"))
-
-(configure-groups)
 
 (defun configure-modeline ()
   (setf wifi:*use-colors* nil)
@@ -110,27 +100,11 @@
   (run-shell-command "pactl set-sink-mute 0 toggle")
   (notify-current-volume-muted))
 
-(defvar *current-volume-level-command*
-  "pactl list sinks | grep  'Volume: front-left' | awk '{ print $5 }'")
-
-(defvar *current-volume-muted-command*
-  "pactl list sinks | grep 'Mute: ' | awk '{ print $2 }'")
-
-(defun current-volume-level ()
-  (first
-   (split-string
-    (uiop:run-program *current-volume-level-command* :output :string))))
-
-(defun volume-muted-p ()
-  (let ((output
-	 (first (split-string (uiop:run-program *current-volume-muted-command* :output :string)))))
-    (equal "yes" output)))
-
 (defun notify-current-volume ()
-  (message "Volume: ~a" (current-volume-level)))
+  (message "Volume: ~a" (cl-recker:volume-level)))
 
 (defun notify-current-volume-muted ()
-  (message "Volume ~:[unmuted~;muted~]" (volume-muted-p)))
+  (message "Volume ~:[unmuted~;muted~]" (cl-recker:volume-muted-p)))
 
 (define-key *top-map* (kbd "XF86AudioMute") "volume-toggle-mute")
 
