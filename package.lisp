@@ -2,7 +2,8 @@
 
 (defpackage #:cl-recker
   (:use #:cl)
-  (:export :hostname-formatter
+  (:export :*colors*
+	   :hostname-formatter
 	   :net-vpn-formatter
-	   :power-charge-percentage
-	   :power-charge-formatter))
+	   :power-charge-formatter
+	   :wireless-formatter))

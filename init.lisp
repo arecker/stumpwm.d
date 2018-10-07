@@ -47,10 +47,7 @@
 (configure-gaps)
 
 (defun configure-colors ()
-  (setf *colors*
-	'("black" "red" "green"
-	  "yellow" "blue" "magenta"
-	  "cyan" "white" "#E5E5E5"))
+  (setf *colors* cl-recker:*colors*)
   (update-color-map (current-screen)))
 
 (configure-colors)
@@ -61,6 +58,7 @@
 (configure-groups)
 
 (defun configure-modeline ()
+  (add-screen-mode-line-formatter #\s 'cl-recker:wireless-formatter)
   (add-screen-mode-line-formatter #\H 'cl-recker:hostname-formatter)
   (add-screen-mode-line-formatter #\V 'cl-recker:net-vpn-formatter)
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
