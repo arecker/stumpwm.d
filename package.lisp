@@ -4,6 +4,4 @@
   (:use #:cl)
   (:export :*colors*
 	   :hostname-formatter
-	   :net-vpn-formatter
-	   :power-charge-formatter
-	   :wireless-formatter))
+	   :power-charge-formatter))

@@ -2,8 +2,6 @@
 
 (in-package #:cl-recker)
 
-(defparameter *vpn-interface* "tun0")
-
 (defparameter *colors*	'("black" "red" "green"
 			  "yellow" "blue" "magenta"
 			  "cyan" "white" "#E5E5E5")
@@ -27,26 +25,6 @@
 (defun power-charge-formatter (ml)
   (declare (ignore ml))
   (format nil "B: ~a" (power-charge-percentage)))
-
-(defparameter *wicd-wireless-cmd* "wicd-cli --wireless -d")
-
-(defun wireless-ssid ()
-  (first (run-command (awk (grep *wicd-wireless-cmd* "Essid: ") 2))))
-
-(defun wireless-ip ()
-  (first (run-command (awk (grep *wicd-wireless-cmd* "IP: ") 2))))
-
-(defun wireless-formatter (ml)
-  (declare (ignore ml))
-  (format nil "W: ~a ~a" (wireless-ssid) (wireless-ip)))
-
-(defun net-vpn-up-p ()
-  (let ((target (merge-pathnames *vpn-interface* #P"/sys/class/net/")))
-    (not (equal nil (probe-file target)))))
-
-(defun net-vpn-formatter (ml)
-  (declare (ignore ml))
-  (format nil "~a: ~:[down~;up~]" *vpn-interface* (net-vpn-up-p)))
 
 (defun hostname-formatter (ml)
   (declare (ignore ml))

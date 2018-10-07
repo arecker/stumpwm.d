@@ -2,7 +2,7 @@
 
 (defun load-modules ()
   (set-module-dir "~/.stumpwm.d/modules/")
-  (dolist (module '("pass" "swm-gaps" "ttf-fonts"))
+  (dolist (module '("pass" "swm-gaps" "ttf-fonts" "wifi"))
     (load-module module)))
 
 (load-modules)
@@ -58,12 +58,11 @@
 (configure-groups)
 
 (defun configure-modeline ()
-  (add-screen-mode-line-formatter #\s 'cl-recker:wireless-formatter)
+  (setf wifi:*use-colors* nil)
   (add-screen-mode-line-formatter #\H 'cl-recker:hostname-formatter)
-  (add-screen-mode-line-formatter #\V 'cl-recker:net-vpn-formatter)
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
-  (setf *time-modeline-string* "%I:%M %P")
-  (setf *screen-mode-line-format* '("[%n] %v^>%B %d"))
+  (setf  *time-modeline-string* "%a %b %e %I:%M %P")
+  (setf *screen-mode-line-format* '("%H %v^>W: %I  %B  %d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
