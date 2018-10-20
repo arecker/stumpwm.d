@@ -26,10 +26,6 @@
   (declare (ignore ml))
   (format nil "B: ~a" (power-charge-percentage)))
 
-(defun hostname-formatter (ml)
-  (declare (ignore ml))
-  (format nil "~a" (machine-instance)))
-
 (defparameter *pactl-cmd* "pactl list sinks")
 
 (defun volume-level ()

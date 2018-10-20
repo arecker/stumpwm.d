@@ -2,7 +2,7 @@
 
 (defun load-modules ()
   (set-module-dir "~/.stumpwm.d/modules/")
-  (dolist (module '("pass" "swm-gaps" "ttf-fonts" "wifi"))
+  (dolist (module '("pass" "swm-gaps" "ttf-fonts" "wifi" "hostname"))
     (load-module module)))
 
 (load-modules)
@@ -17,7 +17,8 @@
   (setf *window-format* " %30t ")
   (set-win-bg-color "#E5E5E5")
   (setf *window-border-style* :thin)
-  (setf *new-frame-action* :last-window))
+  (setf *new-frame-action* :last-window)
+  (setf *mouse-focus-policy* :click))
 
 (configure-windows)
 
@@ -49,10 +50,9 @@
 
 (defun configure-modeline ()
   (setf wifi:*use-colors* nil)
-  (add-screen-mode-line-formatter #\H 'cl-recker:hostname-formatter)
   (add-screen-mode-line-formatter #\B 'cl-recker:power-charge-formatter)
-  (setf  *time-modeline-string* "%a %b %e %I:%M %P")
-  (setf *screen-mode-line-format* '("%H %v^>W: %I  %B  %d"))
+  (setf *time-modeline-string* "%a %b %e %I:%M %P")
+  (setf *screen-mode-line-format* '("%h %v^>W: %I  %B  %d"))
   (setf *mode-line-background-color* "#E5E5E5")
   (setf *mode-line-foreground-color* "#000000")
   (setf *mode-line-border-width* 5)
